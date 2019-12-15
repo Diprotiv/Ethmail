@@ -90,7 +90,7 @@ module.exports = {
         password: "config/privatenet/password" // Password to unlock the account
       }
     ],
-    targetGasLimit: 8000000,
+    targetGasLimit: 80000000,
     simulatorBlocktime: 0
   },
 
@@ -111,7 +111,7 @@ module.exports = {
         password: "config/privatenet/password"
       }
     ],
-    targetGasLimit: 8000000,
+    targetGasLimit: 80000000,
     simulatorBlocktime: 0
   },
 

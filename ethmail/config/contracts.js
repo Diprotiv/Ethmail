@@ -8,26 +8,13 @@ module.exports = {
       type: "ws" // Type of connection (ws or rpc),
       // Accounts to use instead of the default account to populate your wallet
       // The order here corresponds to the order of `web3.eth.getAccounts`, so the first one is the `defaultAccount`
-      /*,accounts: [
+      ,accounts: [
         {
-          privateKey: "your_private_key",
+          privateKey: "8D3AF9E35DA7F6186FB1D80D5A0F5D3F4FB87B3485B637133C10B4597390F696",
           balance: "5 ether"  // You can set the balance of the account in the dev environment
                               // Balances are in Wei, but you can specify the unit with its name
-        },
-        {
-          privateKeyFile: "path/to/file", // Either a keystore or a list of keys, separated by , or ;
-          password: "passwordForTheKeystore" // Needed to decrypt the keystore file
-        },
-        {
-          mnemonic: "12 word mnemonic",
-          addressIndex: "0", // Optional. The index to start getting the address
-          numAddresses: "1", // Optional. The number of addresses to get
-          hdpath: "m/44'/60'/0'/0/" // Optional. HD derivation path
-        },
-        {
-          "nodeAccounts": true // Uses the Ethereum node's accounts
         }
-      ]*/
+      ]
     },
     // order of connections the dapp should connect to
     dappConnection: [
