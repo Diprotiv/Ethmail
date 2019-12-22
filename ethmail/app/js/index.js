@@ -2,8 +2,7 @@ import EmbarkJS from 'Embark/EmbarkJS';
 import AccountBoard from 'Embark/contracts/AccountBoard';
 import MessageBoard from 'Embark/contracts/MessageBoard';
 import $ from 'jquery';
-const NodeRSA = require('node-rsa');
-const rsa = require('./rsa');
+const JSEncrypt = require('jsencrypt');
 // import your contracts
 // e.g if you have a contract named SimpleStorage:
 //import SimpleStorage from 'Embark/contracts/SimpleStorage';
@@ -12,49 +11,70 @@ const rsa = require('./rsa');
 EmbarkJS.onReady((err) => {
   // You can execute contract calls after the connection
   $(document).ready(() => {
+
+    $('#messages').click(() =>{
+      $('#messages').empty();
+    });
     $('#signupForm button').click(() => {
       console.log('[INFO]Getting details for a new account...')
 
-      var key = generateKey();
+      var crypt = new JSEncrypt.JSEncrypt();
+      var privateKey = crypt.getPrivateKey();
+      var publicKey = crypt.getPublicKey();
       var account = {
         'address': $('#ethAddress').val(),
         'name': $('#name').val(),
-        'publicKey': rsa.getPublicKey(key),
-        'config': key,
+        'publicKey': publicKey
       };
-
-      console.log(account.address);
       $('#ethAddress').empty();
       $('#name').empty();
+
       AccountBoard.methods.setAccount(account.address, account.publicKey, account.name).send();
-      alert('Your account has successfully been created!\n\n' + account.config.exportKey());
+      console.log(account.publicKey);
+      console.log('[INFO]Private key has been saved...');
+      console.log(privateKey);
     });
 
 
+
     $('#sendMessage button').click(() => {
-      MessageBoard.methods.writeMessage("Testing the writing part").send();
-      console.log(MessageBoard);
-      /*
-      console.log('[INFO]Getting a message...');
+
+      console.log('[INFO]Preparing a message...');
       var sendEthAddress = $('#sendEthAddress').val();
       var sendData = $('#sendData').val();
       $('#sendEthAddress').empty();
       $('#sendData').empty();
-      getReceiver(sendEthAddress);
 
-      MessageBoard.methods.writeMessage(encrypt(getReceiver(sendEthAddress), sendData)
-        $('#writeMessage input').val()
-      ).send();
+      /*
+      const encrypt = new JSEncrypt.JSEncrypt();
+      encrypt.setKey(sendEthAddress);
+      var encrypted = encrypt.encrypt('Hello').toString();
+      const decrypt = new JSEncrypt.JSEncrypt();
+      decrypt.setKey(sendData);
+      var decrypted = decrypt.decrypt(encrypted);
+      console.log(sendEthAddress);
+      console.log(sendData);
+      console.log('Hello');
+      console.log(encrypted);
+      console.log(decrypted);
       */
-
+      AccountBoard.methods.getAccount(sendEthAddress).call().then((publicKey) => {
+        console.log('[INFO]Fetching receiver completed...')
+        const encrypt = new JSEncrypt.JSEncrypt();
+        encrypt.setKey(publicKey.toString());
+        var encrypted = encrypt.encrypt(sendData).toString();
+        MessageBoard.methods.writeMessage(encrypted).send();
+        alert('Message sent successfully!');
+      });
+      //
     });
 
     $('#readMessages').click(() => {
-      readMessages();
-      /*
-      console.log('[INFO]Reading user...');
-      getReceiver('0x1aA53C1C86bE20EE239eF1dC8Ac9eB4219F6a590');
-      */
+      console.log('[INFO]Getting the number of messages...');
+      MessageBoard.methods.count().call().then((c) => {
+        console.log(c);
+        readMessages(c);
+      });
     });
 
   });
@@ -64,24 +84,26 @@ const generateKey = () => {
   return new NodeRSA( { b: 2048 } );
 }
 
-const readMessages = () => {
-  for(var i = 0; i < 10; i++) {
+const readMessages = (count) => {
+  for(var i = 0; i < count; i++) {
     readMessage(i);
   }
+  $('#privateKey').empty();
 }
 
-const getReceiver = (address) => {
-  AccountBoard.methods.getAccount(address).call().then((publicKey, firstName, lastName) => {
-    console.log(publicKey);
-    console.log(firstName);
-    console.log(lastName);
-  });
-  console.log('[INFO]Fetching completed...')
-}
 const readMessage = (messageIndex) => {
 
-  MessageBoard.methods.messages(messageIndex).call().then((message) => {
-    console.log('[INFO] fetching the message body...');
-    console.log('[INFO] data: ' + message);
+  MessageBoard.methods.messages(messageIndex).call().then((encrypted) => {
+    console.log('[INFO]Fetching the message body...');
+    const decrypt = new JSEncrypt.JSEncrypt();
+    decrypt.setKey($('#privateKey').val());
+    var decrypted = decrypt.decrypt(encrypted);
+    console.log('[INFO]Decrypting the data: ' + decrypted);
+    // display the messages
+    var tempMessage = $('#message').clone()
+    tempMessage.empty();
+    tempMessage.append(decrypted);
+    tempMessage.show();
+    $('#messages').append(tempMessage);
   });
 }

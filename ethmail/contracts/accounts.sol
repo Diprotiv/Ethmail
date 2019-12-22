@@ -5,7 +5,7 @@ contract AccountBoard {
       string publicKey;
       string name;
     }
-    mapping (address => Account) accounts;
+    mapping (address => Account) public accounts;
     address[] public userAccounts;
     function setAccount(address _address, string _publicKey, string _name) {
       Account storage account;
@@ -17,7 +17,7 @@ contract AccountBoard {
     function getAccounts() public returns (address[]) {
       return userAccounts;
     }
-    function getAccount(address acc) public returns (string, string) {
-      return (accounts[acc].publicKey, accounts[acc].name);
+    function getAccount(address acc) public returns (string) {
+      return accounts[acc].publicKey;
     }
 }
