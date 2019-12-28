@@ -70,6 +70,7 @@ EmbarkJS.onReady((err) => {
     });
 
     $('#readMessages').click(() => {
+      $('#messages').empty();
       console.log('[INFO]Getting the number of messages...');
       MessageBoard.methods.count().call().then((c) => {
         console.log(c);
