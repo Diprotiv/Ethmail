@@ -7,14 +7,21 @@ To Use: Visit the site using Metamask.
 
 To Build: Install embark and run 'embark run' to build and deploy.
 
-![Ethmail screenshot](./screen1.png)
-
-![Ethmail screenshot](./screen2.png)
-
 A few things you need to know, in order to get started with the tutorial:-
 * Ethcode/Etheratom
 * Embark
 * Metamask
+
+### Setting up Ethmail
+* Create your Metamask account
+* Get your private key from Metamask and replace the `privateKey` inside ethmail/config/contracts.js 
+* Setup embark and run `embark run` inside the ethmail folder
+
+![Ethmail screenshot](./screen1.png)
+
+![Ethmail screenshot](./screen2.png)
+
+
 
 
 ## Getting started with Embark

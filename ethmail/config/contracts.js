@@ -10,6 +10,7 @@ module.exports = {
       // The order here corresponds to the order of `web3.eth.getAccounts`, so the first one is the `defaultAccount`
       ,accounts: [
         {
+          //SET YOUR PRIVATE KEY FROM METAMASK
           privateKey: "8D3AF9E35DA7F6186FB1D80D5A0F5D3F4FB87B3485B637133C10B4597390F696",
           balance: "5 ether"  // You can set the balance of the account in the dev environment
                               // Balances are in Wei, but you can specify the unit with its name
