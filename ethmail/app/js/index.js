@@ -11,7 +11,6 @@ const JSEncrypt = require('jsencrypt');
 EmbarkJS.onReady((err) => {
   // You can execute contract calls after the connection
   $(document).ready(() => {
-
     $('#messages').click(() =>{
       $('#messages').empty();
     });
@@ -33,6 +32,9 @@ EmbarkJS.onReady((err) => {
       console.log(account.publicKey);
       console.log('[INFO]Private key has been saved...');
       console.log(privateKey);
+      $('#signupForm').hide();
+      document.getElementById('signupSuccessful').hidden = false;
+      document.getElementById('messageFeature').hidden = false;
     });
 
 
